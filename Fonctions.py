@@ -96,7 +96,7 @@ def score_idf(repertoire):
 
     # Calculer IDF pour chaque mot
     for mot, occurrences in mots_par_document.items():
-        idf_score = math.log10(nombre_documents / occurrences)
-        idf_scores[mot] = idf_score
+        score = math.log10(nombre_documents / occurrences)
+        idf_scores[mot] = score
 
     return idf_scores
