@@ -1,5 +1,5 @@
 import os
-
+import math
 # Fonction pour l'extraction des fichiers dans le dossier speeches
 def liste_fichiers(repertoire,extension): # Fonction prenant en paramètre le chemin du dit dossier et l'extension des fichiers à extraire
     fichiers = []
@@ -60,3 +60,43 @@ def supp_ponctuation(repertoire):
                         i = ""
                     nv_ligne += i # Recuperation de tous les caractères de la ligne
                 f.write(nv_ligne) # Ecriture de la ligne
+
+
+def compter_mots(chaine):
+    mots = chaine.split()  # Séparer la chaîne en mots
+    compteur_mots = {}  # Initialiser un dictionnaire vide pour compter les mots
+
+    for mot in mots:
+        # Vérifier si le mot est déjà dans le dictionnaire, sinon initialiser à 0
+        compteur_mots[mot] = compteur_mots.get(mot, 0) + 1
+
+    return compteur_mots
+
+def score_idf(repertoire):
+    nombre_documents = 0
+    mots_par_document = {}
+    idf_scores = {}
+
+    # Parcourir les fichiers du répertoire
+    for files in os.listdir(repertoire):
+        file_path = os.path.join(repertoire, files )
+        if os.path.isfile(file_path) and files.endswith('.txt'):
+            nombre_documents += 1
+            mots_du_document = set()
+
+            # Lire le contenu du fichier
+            with open(file_path, 'r') as f:
+                contenu = f.read().split()
+                for mot in contenu:
+                    mots_du_document.add(mot)  # Stocker les mots uniques du document
+
+            # Mettre à jour le dictionnaire mots_par_document avec les mots du document actuel
+            for mot in mots_du_document:
+                mots_par_document[mot] = mots_par_document.get(mot, 0) + 1
+
+    # Calculer IDF pour chaque mot
+    for mot, occurrences in mots_par_document.items():
+        idf_score = math.log10(nombre_documents / occurrences)
+        idf_scores[mot] = idf_score
+
+    return idf_scores
