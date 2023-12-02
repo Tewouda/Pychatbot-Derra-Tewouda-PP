@@ -1,52 +1,62 @@
 import os
-import math
-def list_of_files(a,b):
-    files_names = []
-    for elem in os.listdir(a):
-        if elem.endswith(b):
-            files_names.append(elem[11:-4])
-    return files_names
 
-def pres_noms(l) :
-    dic = {}
-    for elem in l :
-        dic[elem] = elem[11:]
+# Fonction pour l'extraction des fichiers dans le dossier speeches
+def liste_fichiers(repertoire,extension): # Fonction prenant en paramètre le chemin du dit dossier et l'extension des fichiers à extraire
+    fichiers = []
+    for elem in os.listdir(repertoire):
+        if elem.endswith(extension):
+            fichiers.append(elem[11:-4]) # Création d'une liste contenant le nom des fichiers du dossier
+    return fichiers
 
-
-def compter_mots(chaine) :
-    mots = chaine.split()   # Séparer la chaîne en mots
-    compteur_mots = {}     # Initialiser un dictionnaire vide pour compter les mots
-
-    for mot in mots :
-        # Vérifier si le mot est déjà dans le dictionnaire, sinon initialiser à 0
-        compteur_mots[mot] = compteur_mots.get(mot, 0) + 1
-    return compteur_mots
+# Fonction affichant la liste des présidents en faisant attention aux doublons
+def liste_noms_presi(liste) :
+    Set = set()
+    for elem in liste :
+        mot = ""
+        for chr in elem :
+            if ord(chr) < ord("0") or ord(chr) >ord("9") : # Elimination des caractères numeriques
+                mot+= chr
+        Set.add(mot) # Ajout des elements sans caractères numeriques dans un set afin d'eliminer les doublouns
+    print(list(Set)) # castage en liste du set et affichage
 
 
-def score_idf(repertoire) :
-    mots_par_documents = {}
-    idf_scores = {}
-    nombre_documents = 0
-    # Parcourir les fichiers du répertoire
+# Fonction convertissant le contenu des fichiers en miniscules et stockage dans un autre fichier
+def convertion_miniscule(repertoire1,repertoire2) :
+    for fichier in os.listdir(repertoire1) : # Parcours des fichiers du repertoire 1
+
+        file_path = os.path.join(repertoire1,fichier) # Recuperation du chemin d'acces de chaque fichiers
+
+        with open(file_path,"r") as f : # Lecture du fichier en entier
+            ligne = f.read()
+
+
+        nv_ligne =""
+        for i in ligne : # Parcours du contenu du ficher elements par elements
+            if ord(i) >= 65 and ord(i) <= 90 :
+                i = chr(ord(i) + 32) # convertion en minuscule
+            nv_ligne += i # Recuperation du contenu convertis
+
+        nv_fichier = fichier[:-4] + "_cleaned.txt" # Nommination du nouveau fichier
+
+        with open(repertoire2 +"/"+nv_fichier,"w") as f : # Creation du nouveau fichier dans le nouveau repertoire
+            f.write(nv_ligne)
+
+
+# Fonction supprimant la ponctuation
+def supp_ponctuation(repertoire):
+
     for files in os.listdir(repertoire) :
-        files_path = os.path.join(repertoire, files)
-        if os.path.isfile(files_path) and files.endswith('.txt'):
-            nombre_documents += 1
-            mots_du_document = set()
-        with open(files_path, "r") as f :
-            ligne = f.read().split()
-            for mot in ligne :
-                mots_du_document.add(mot)  # Stocker les mots uniques du document
+        files_path = os.path.join(repertoire,files)
+        with open(files_path,"r") as f : # Lectures du fichiers
+            lignes = f.readlines()
 
-        for mot in mots_du_document :
-            # Mettre à jour le dictionnaire mots_par_document avec les mots du document actuel
-            mots_par_documents[mot] = mots_par_documents.get(mot, 0) + 1
-
-    # Calculer l'IDF pour chaque mot
-    for mot, occurrences in mots_par_documents.items() :
-        idf_score = math.log10(nombre_documents / occurrences)
-        idf_scores[mot] = idf_score
-
-    return idf_scores
-
-
+        with open(files_path, "w") as f: # Reecriture du fichier
+            for ligne in lignes : # Parcours des lignes du fichiers
+                nv_ligne = ""
+                for i in ligne : # Parcours des caractères dans les lignes
+                    if (i == "'" or i == "-") or i == " " : # Remplacement de certains caractères par un espace
+                        i = " "
+                    elif (ord(i) < 97 or ord(i) > 122) and (i not in ["é","è","ç","à","ù"]) : # Suppression de certains caractères
+                        i = ""
+                    nv_ligne += i # Recuperation de tous les caractères de la ligne
+                f.write(nv_ligne) # Ecriture de la ligne
