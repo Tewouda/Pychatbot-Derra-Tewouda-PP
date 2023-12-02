@@ -75,7 +75,7 @@ def compter_mots(chaine):
 def score_idf(repertoire):
     nombre_documents = 0
     mots_par_document = {}
-    idf_score = {}
+    idf_scores = {}
 
     # Parcourir les fichiers du répertoire
     for files in os.listdir(repertoire):
@@ -97,6 +97,6 @@ def score_idf(repertoire):
     # Calculer IDF pour chaque mot
     for mot, occurrences in mots_par_document.items():
         score = math.log10(nombre_documents / occurrences)
-        idf_score[mot] = score
+        idf_scores[mot] = score
 
-    return idf_score
+    return idf_scores

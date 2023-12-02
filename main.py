@@ -12,5 +12,5 @@ repertoire_cleaned = "./cleaned"
 #supp_ponctuation(repertoire_cleaned)
 
 
-idf_scores = score_idf(repertoire_cleaned)
-print(idf_scores)
+scores = score_idf(repertoire_cleaned)
+print(scores)
