@@ -128,7 +128,7 @@ def matrice_tf_idf (repertoire,idf) :
         j +=1
     return M
 
-def afficher_mot_moins_important (repertoire,idf) :
+def afficher_mot_moins_important (repertoire,idf_scores) :
     contenu = ""
     for file in os.listdir(repertoire):
         file_path = os.path.join(repertoire, file)
@@ -138,7 +138,7 @@ def afficher_mot_moins_important (repertoire,idf) :
 
     L = {}
     for mot in tf :
-        L[mot] = tf[mot] * idf[mot]
+        L[mot] = tf[mot] * idf_scores[mot]
     min = 10
     res = ""
     for i in L :
