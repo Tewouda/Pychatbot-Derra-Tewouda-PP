@@ -100,3 +100,31 @@ def score_idf(repertoire):
         idf_scores[mot] = score
 
     return idf_scores
+
+def matrice_tf_idf (repertoire,idf) :
+    cpt_col = 0
+    contenu = ""
+    for file in os.listdir(repertoire) :
+        cpt_col +=1
+        file_path = os.path.join(repertoire,file)
+        with open(file_path,"r") as f :
+            contenu += f.read()
+
+    tf = compter_mots(contenu)
+    cpt_lig = 0
+    for mot in tf :
+        cpt_lig +=1
+
+    M = [0]*cpt_lig
+    for i in range(cpt_lig) :
+        M[i] = [0]*cpt_col
+
+    j = 0
+    for file in os.listdir(repertoire) :
+        i = 0
+        for mot in idf :
+            M[i][j] = idf[mot]* tf.get(mot,1)
+            i += 1
+        j +=1
+    return M
+
