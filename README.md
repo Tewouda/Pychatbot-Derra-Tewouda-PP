@@ -1,2 +1,3 @@
 # Pychatbot-Derra-Tewouda-PP
-Projet python à remettre le 04/01
+Projet python de Abdel Derra Founeke et Bryan Tewouda Jose
+Lien du dépôt Git du projet :  
