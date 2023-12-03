@@ -122,9 +122,67 @@ def matrice_tf_idf (repertoire,idf) :
     j = 0
     for file in os.listdir(repertoire) :
         i = 0
-        for mot in idf :
-            M[i][j] = idf[mot]* tf.get(mot,1)
+        for mot in tf :
+            M[i][j] = idf[mot]* tf[mot]
             i += 1
         j +=1
     return M
 
+def afficher_mot_moins_important (repertoire,idf) :
+    contenu = ""
+    for file in os.listdir(repertoire):
+        file_path = os.path.join(repertoire, file)
+        with open(file_path, "r") as f:
+            contenu += f.read()
+    tf = compter_mots(contenu)
+
+    L = {}
+    for mot in tf :
+        L[mot] = tf[mot] * idf[mot]
+    min = 10
+    res = ""
+    for i in L :
+        if L[i] <= min :
+            min = L[i]
+            res = i
+    print(res, "est le mot le moins important")
+    print()
+
+def afficher_mot_plus_important(repertoire,idf) :
+    contenu = ""
+    for file in os.listdir(repertoire):
+        file_path = os.path.join(repertoire, file)
+        with open(file_path, "r") as f:
+            contenu += f.read()
+    tf = compter_mots(contenu)
+
+    L = {}
+    for mot in tf:
+        L[mot] = tf[mot] * idf[mot]
+    max = 0
+    res = ""
+    for i in L:
+        if L[i] >= max:
+            max = L[i]
+            res = i
+    print(res, "est le mot le plus important")
+    print()
+
+def max_mot_chirac(repertoire) :
+    contenu = ""
+    for file in os.listdir(repertoire):
+        i = 1
+        while i <= 2 :
+            file_path = os.path.join(repertoire, file)
+            with open(file_path, "r") as f:
+                contenu += f.read()
+            i += 1
+    tf = compter_mots(contenu)
+    max = 0
+    res = ""
+    for mot in tf :
+        if tf[mot] >= max :
+            max = tf[mot]
+            res = mot
+    print("Le mot le plus repeter par le président Chirac est" , res)
+    print()
