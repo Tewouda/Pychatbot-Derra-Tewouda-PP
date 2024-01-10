@@ -181,25 +181,17 @@ def afficher_mot_moins_important( idf, tf) :
     return M
 
 
-def afficher_mot_plus_important(repertoire, idf):
-    contenu = ""
-    for file in os.listdir(repertoire):
-        file_path = os.path.join(repertoire, file)
-        with open(file_path, "r", encoding='utf-8') as f:
-            contenu += f.read()
-    tf = compter_mots(contenu)
-
+def afficher_mot_plus_important(tf, idf):
     L = {}
     for mot in tf:
-        L[mot] = tf[mot] * idf[mot]
-    max = 0
+        for j in range(len(tf[mot])):
+            L[mot] = tf[mot][j] * idf.get(mot, 0)
     res = ""
     for i in L:
-        if L[i] >= max:
-            max = L[i]
-            res = i
-    print(res, "est le mot le plus important")
-    print()
+        if (L[i] > 0.0):
+            res += i + " "
+    M = res.split()
+    return M
 
 
 def max_mot_chirac(repertoire):

@@ -1,4 +1,5 @@
 from Fonctions import *
+1
 print()
 print(" Bonjour comment puis-je vous aider aujourdhui ?\n")
 print("    1. Afficher la liste des mots les moins importants dans le corpus de documents. Un mot est dit non important, si son TD-IDF = 0 dans tous les fichiers.")
@@ -14,12 +15,14 @@ while choix < 1 or choix > 6 :
 
 repertoire_speeches = "./speeches"
 repertoire_cleaned = "./cleaned"
+convertion_miniscule(repertoire_speeches,repertoire_cleaned)
+supp_ponctuation(repertoire_cleaned)
 idf = score_idf(repertoire_cleaned)
 tf = score_tf(repertoire_cleaned)
 
 if choix == 1 :
     print()
-    print(afficher_mot_moins_important(idf,tf))
+    afficher_mot_moins_important(idf,tf)
 
 elif choix == 2 :
     print()
