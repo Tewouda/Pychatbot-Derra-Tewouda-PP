@@ -3,8 +3,7 @@ import math
 
 
 # Fonction pour l'extraction des fichiers dans le dossier speeches
-def liste_fichiers(repertoire,
-                   extension):  # Fonction prenant en paramètre le chemin du dit dossier et l'extension des fichiers à extraire
+def liste_fichiers(repertoire,extension):  # Fonction prenant en paramètre le chemin du dit dossier et l'extension des fichiers à extraire
     fichiers = []
     for elem in os.listdir(repertoire):
         if elem.endswith(extension):
@@ -88,7 +87,7 @@ def score_tf_term(terme, repertoire, document):
         return occ / len(words)
 
 
-def score_tf_affichage(repertoire):
+def score_tf(repertoire):
     files = liste_fichiers(repertoire, "txt")
     word_set = set()
     for file in files:
@@ -104,7 +103,7 @@ def score_tf_affichage(repertoire):
             d_tf[word] = []
         for file in files:
             d_tf[word].append(score_tf_term(word, repertoire, file))
-    print(d_tf)
+    return d_tf
 
 
 def score_idf(repertoire):
@@ -163,16 +162,17 @@ def tfidf_matrix(repertoire):
     for i, word in enumerate(words):
         for j, file in enumerate(files):
             tf_value = tf_scores[word][j]
-            idf_value = idf_scores.get(word, 0)
+            idf_value = idf_scores.get(word,0)
             matrix[i][j] = tf_value * idf_value
 
     return matrix
 
 
-def afficher_mot_moins_important(repertoire, idf, tf) :
+def afficher_mot_moins_important( idf, tf) :
     L = {}
     for mot in tf:
-        L[mot] = tf[mot] * idf[mot]
+        for j in range(len(tf[mot])):
+            L[mot] = tf[mot][j] * idf.get(mot,0)
     res = ""
     for i in L:
         if L[i] == 0.0 :
